@@ -1,0 +1,24 @@
+# Rust build artifacts
+/target
+Cargo.lock          # excluded for libraries; commit if/when an mdkit-cli binary lands
+
+# IDE
+/.idea
+/.vscode
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+*.swp
+*.swo
+*~
+
+# Local test fixtures (large binary files we don't want in git)
+/tests/fixtures/large/
+
+# Coverage / profiling
+/coverage
+*.profraw

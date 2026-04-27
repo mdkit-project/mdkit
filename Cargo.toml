@@ -1,0 +1,59 @@
+[package]
+name = "mdkit"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.75"
+authors = ["mdkit contributors"]
+description = "Get markdown out of any document — Pandoc + pdfium + platform-native OCR, dispatched per format."
+documentation = "https://docs.rs/mdkit"
+homepage = "https://github.com/mdkit-project/mdkit"
+repository = "https://github.com/mdkit-project/mdkit"
+license = "MIT OR Apache-2.0"
+readme = "README.md"
+keywords = ["markdown", "pdf", "docx", "pandoc", "ocr"]
+categories = ["text-processing", "parser-implementations", "filesystem"]
+exclude = [
+    "/.github",
+    "/tests/fixtures/large/*",
+]
+
+[features]
+# The default set is the in-process Rust backends — no sidecar binaries
+# to bundle, no platform-specific FFI. Adds ~7 MB to a release build.
+default = ["pdf", "calamine", "csv", "html"]
+
+# In-process Rust backends.
+pdf      = []   # placeholder; pulls in pdfium-render in v0.2
+calamine = []   # placeholder; pulls in calamine in v0.4
+csv      = []   # placeholder; pulls in csv in v0.4
+html     = []   # placeholder; pulls in html2md in v0.4
+
+# Sidecar backend. Caller is responsible for shipping the Pandoc binary
+# and pointing mdkit at it via Engine::with_pandoc_binary(...).
+pandoc   = []
+
+# OCR backends — pick one. Both can coexist; ocr-platform is preferred
+# at runtime when available (macOS / Windows), falling back to ocr-onnx.
+ocr-platform = []   # placeholder; macOS Vision + Windows.Media.Ocr in v0.5
+ocr-onnx     = []   # placeholder; Surya/ONNX in v0.6
+
+# Build-everything convenience for downstream tests.
+full = ["pdf", "pandoc", "ocr-platform", "ocr-onnx", "calamine", "csv", "html"]
+
+[dependencies]
+thiserror = "2"
+
+[dev-dependencies]
+tempfile = "3"
+
+[lints.rust]
+unsafe_code = "forbid"
+missing_docs = "warn"
+
+[lints.clippy]
+all = { level = "warn", priority = -1 }
+pedantic = { level = "warn", priority = -1 }
+# Selectively allow the pedantic lints that fight common idioms.
+module_name_repetitions = "allow"
+must_use_candidate = "allow"
+missing_errors_doc = "allow"
