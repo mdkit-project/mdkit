@@ -11,6 +11,35 @@ auxiliary types until 1.0 lands.
 
 ## [Unreleased]
 
+## [0.7.3] — 2026-04-27
+
+### Added
+
+- **`examples/extract.rs`** — runnable CLI that takes a path and
+  prints the extracted markdown. Calls
+  `Engine::with_defaults_diagnostic` and surfaces any backend
+  registration failures (libpdfium not on the search path,
+  pandoc not in PATH, etc.) so missing runtime deps are debuggable
+  without reading mdkit source. Run with:
+  ```bash
+  cargo run --example extract -- /path/to/document.pdf
+  cargo run --example extract --features pandoc -- /path/to/report.docx
+  cargo run --example extract --features ocr-platform -- /path/to/scan.pdf
+  ```
+  Document-level metadata (title, OCR `extractor_chain`, etc.)
+  surfaces as HTML comment headers above the markdown body so
+  callers can see exactly which backend produced the output.
+- README "Examples" section pointing at the new `examples/`
+  directory.
+
+### Notes
+
+- v0.7.3 is the first of v0.7.x's planned "examples + cookbook"
+  iteration. Future releases will add a `batch.rs` example
+  (folder of files → directory of markdown files) and a
+  `custom_extractor.rs` example (showing how to implement the
+  `Extractor` trait for a new format).
+
 ## [0.7.2] — 2026-04-27
 
 ### Added
@@ -681,7 +710,8 @@ docs / API audit pass, then 1.0.
   + clippy + rustfmt + cargo-audit gates).
 - `CONTRIBUTING.md`, `SECURITY.md` for repo hygiene.
 
-[Unreleased]: https://github.com/seryai/mdkit/compare/v0.7.2...HEAD
+[Unreleased]: https://github.com/seryai/mdkit/compare/v0.7.3...HEAD
+[0.7.3]: https://github.com/seryai/mdkit/compare/v0.7.2...v0.7.3
 [0.7.2]: https://github.com/seryai/mdkit/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/seryai/mdkit/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/seryai/mdkit/compare/v0.6.0...v0.7.0
