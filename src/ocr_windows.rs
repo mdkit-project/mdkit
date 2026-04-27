@@ -50,11 +50,11 @@ use crate::{Document, Error, Extractor, Result};
 use std::path::Path;
 use std::time::Duration;
 use windows::core::{RuntimeType, HSTRING};
-use windows::Foundation::{AsyncStatus, IAsyncOperation};
 use windows::Globalization::Language;
 use windows::Graphics::Imaging::BitmapDecoder;
 use windows::Media::Ocr::OcrEngine;
 use windows::Storage::{FileAccessMode, StorageFile};
+use windows_future::{AsyncStatus, IAsyncOperation};
 
 /// Windows.Media.Ocr-backed OCR extractor.
 ///
