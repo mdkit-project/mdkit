@@ -4,10 +4,10 @@
 Tauri / Iced / native desktop apps that want best-in-class document
 extraction without a 350 MB Python sidecar.
 
-> **Status:** v0.1 — design pass. The trait surface + dispatch engine
-> are in place; per-format extractors land incrementally. Not yet
-> recommended for production use. Watch / star the repo to follow
-> along.
+> **Status:** v0.2 — first real backend (PDF via Pdfium) shipped. The
+> trait surface + dispatch engine are stable; remaining backends land
+> incrementally per the roadmap below. Not yet recommended for
+> production use. Watch / star the repo to follow along.
 
 ## Why this exists
 
@@ -130,7 +130,10 @@ This is a young project. v0.1 ships the trait surface, dispatch
 engine, and a no-op test extractor. Real backends land per the
 roadmap below:
 
-- [ ] v0.2 — `pdf` feature (`pdfium-render` integration)
+- [x] **v0.2 — `pdf` feature (`pdfium-render` integration).** `PdfiumExtractor`
+      registers automatically in `Engine::with_defaults()`; falls back
+      gracefully when libpdfium isn't installed. See `src/pdf.rs` for
+      libpdfium installation notes.
 - [ ] v0.3 — `pandoc` feature (sidecar wrapper, format detection)
 - [ ] v0.4 — `calamine` + `csv` + `html` features (in-process)
 - [ ] v0.5 — `ocr-platform` feature (macOS Vision, Windows.Media.Ocr)

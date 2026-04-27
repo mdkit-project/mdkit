@@ -1,6 +1,6 @@
 [package]
 name = "mdkit"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 rust-version = "1.75"
 authors = ["mdkit contributors"]
@@ -23,10 +23,10 @@ exclude = [
 default = ["pdf", "calamine", "csv", "html"]
 
 # In-process Rust backends.
-pdf      = []   # placeholder; pulls in pdfium-render in v0.2
-calamine = []   # placeholder; pulls in calamine in v0.4
-csv      = []   # placeholder; pulls in csv in v0.4
-html     = []   # placeholder; pulls in html2md in v0.4
+pdf      = ["dep:pdfium-render"]   # PDF text via Google Pdfium (libpdfium required at runtime)
+calamine = []                       # placeholder; pulls in calamine in v0.4
+csv      = []                       # placeholder; pulls in csv in v0.4
+html     = []                       # placeholder; pulls in html2md in v0.4
 
 # Sidecar backend. Caller is responsible for shipping the Pandoc binary
 # and pointing mdkit at it via Engine::with_pandoc_binary(...).
@@ -42,6 +42,12 @@ full = ["pdf", "pandoc", "ocr-platform", "ocr-onnx", "calamine", "csv", "html"]
 
 [dependencies]
 thiserror = "2"
+
+# Optional backends. Each is gated by the corresponding feature flag
+# above. Dependencies use `default-features = false` and only enable
+# the minimum surface mdkit consumes — keeps the dependency graph
+# small for downstream consumers.
+pdfium-render = { version = "0.9", optional = true, default-features = false, features = ["thread_safe", "pdfium_latest"] }
 
 [dev-dependencies]
 tempfile = "3"

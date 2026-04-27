@@ -48,6 +48,9 @@ use std::path::Path;
 mod error;
 pub use error::{Error, Result};
 
+#[cfg(feature = "pdf")]
+pub mod pdf;
+
 // ---------------------------------------------------------------------------
 // Document — the unit of output
 // ---------------------------------------------------------------------------
@@ -149,10 +152,38 @@ impl Engine {
     }
 
     /// New engine with the default backends for the enabled feature
-    /// flags. Today this is empty — backends arrive in subsequent
-    /// versions per the README's roadmap.
+    /// flags. Backends register themselves silently — if a backend
+    /// can't initialize (e.g. libpdfium isn't on the system library
+    /// path for the `pdf` feature), it's skipped rather than failing
+    /// the whole construction. Use [`with_defaults_diagnostic`] if
+    /// you want to surface those failures to the user.
+    ///
+    /// [`with_defaults_diagnostic`]: Self::with_defaults_diagnostic
     pub fn with_defaults() -> Self {
-        Self::new()
+        let (engine, _errors) = Self::with_defaults_diagnostic();
+        engine
+    }
+
+    /// Like [`with_defaults`](Self::with_defaults) but returns the
+    /// list of backend-init errors alongside the engine, so callers
+    /// can log "PDF support disabled: libpdfium not found" rather
+    /// than silently shipping a degraded experience.
+    pub fn with_defaults_diagnostic() -> (Self, Vec<(&'static str, Error)>) {
+        let mut engine = Self::new();
+        #[allow(unused_mut)]
+        let mut errors: Vec<(&'static str, Error)> = Vec::new();
+
+        #[cfg(feature = "pdf")]
+        {
+            match crate::pdf::PdfiumExtractor::new() {
+                Ok(ext) => {
+                    engine.register(Box::new(ext));
+                }
+                Err(e) => errors.push(("pdf", e)),
+            }
+        }
+
+        (engine, errors)
     }
 
     /// Register a backend. Multiple backends can claim the same
