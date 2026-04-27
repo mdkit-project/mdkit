@@ -1,6 +1,12 @@
 # Rust build artifacts
 /target
-Cargo.lock          # excluded for libraries; commit if/when an mdkit-cli binary lands
+
+# Cargo.lock is excluded — mdkit is a library, not a binary. Per the
+# Cargo book: libraries should not commit Cargo.lock because it gets
+# regenerated when downstream packages depend on us. If we ever ship
+# an `mdkit-cli` binary, drop the line below and commit the lockfile
+# from that point forward.
+Cargo.lock
 
 # IDE
 /.idea
