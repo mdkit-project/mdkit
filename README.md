@@ -127,6 +127,22 @@ Not enabling `pandoc` or `ocr-platform` is fine — extractors for those
 formats simply won't be registered, and `Engine::extract` will return
 `Error::UnsupportedFormat` for them.
 
+## Examples
+
+Runnable example programs live in [`examples/`](examples/):
+
+- [`extract.rs`](examples/extract.rs) — print the extracted markdown
+  for any document. Surfaces backend registration failures
+  (libpdfium / pandoc / etc.) at startup so missing runtime deps
+  are obvious. Run with:
+  ```bash
+  cargo run --example extract -- /path/to/document.pdf
+  cargo run --example extract --features pandoc -- /path/to/report.docx
+  cargo run --example extract --features ocr-platform -- /path/to/scan.pdf
+  ```
+
+More examples (`batch.rs`, `custom_extractor.rs`) land in v0.7.x.
+
 ## License
 
 Dual-licensed under [MIT](LICENSE-MIT) OR [Apache 2.0](LICENSE-APACHE)
